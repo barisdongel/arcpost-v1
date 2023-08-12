@@ -1,3 +1,4 @@
+<?php include 'function.php'; ?>
 <!doctype html>
 <html lang="en">
 
@@ -12,42 +13,42 @@
     <header>
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">İsim</a>
+                <img src="https://www.kadencewp.com/wp-content/uploads/2020/10/alogo-1.png" width="30%" height="75" alt="">
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Makarnalar</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Salatlar</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">İçecekler</a>
-                        </li>
+                        <?php foreach (cokVeri("category", "*", "order by id") as $category) : ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="category?id=<?=$category['id']?>"><?=$category['name']?></a>
+                            </li>
+                        <?php endforeach; ?>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
     <div class="container">
-        <div class="category">
-            <h3 class="text-center">Makarnalar</h3>
-            <div class="row">
-                <div class="col-6 py-2 px-2">
-                    <div class="card">
-                        <img src="https://pyxis.nymag.com/v1/imgs/c76/ac6/aa0d915de22475be897d49c0847936766a-26-cacio-e-pepe.2x.h473.w710.jpg" class="card-img-top" alt="item">
-                        <div class="card-body">
-                            <h5 class="card-title">Makarna</h5>
-                            <p class="card-text">Soslu Makarna</p>
-                            <a href="#" class="btn btn-primary">Fiyat: 95₺</a>
+        <?php foreach (cokVeri("category", "*", "order by id") as $category) : ?>
+            <div class="category my-4">
+                <h3 class="text-center border-bottom"><?= $category['name'] ?></h3>
+                <div class="row">
+                    <?php foreach (cokVeri("item", "*", "where category_id = {$category['id']}") as $item) : ?>
+                        <div class="col-6 py-2 px-2">
+                            <div class="card text-center">
+                                <img src="<?= $item['image'] ?>" class="card-img-top" alt="item" style="width:100%; height:200px; object-fit:cover;">
+                                <div class="card-body">
+                                    <h5 class="card-title"><?= $item['name'] ?></h5>
+                                    <p class="card-text"><?= $item['description'] ?></p>
+                                    <a href="#" class="btn btn-primary">Fiyat: <?= $item['price'] ?> ₺</a>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
-        </div>
+        <?php endforeach; ?>
     </div>
 
     <footer class="text-center text-muted">Bu site <a class="text-dark fw-bold text-decoration-none" href="https://inoception.com">Inoception Yazılım</a> tarafından yapıldı.</footer>
