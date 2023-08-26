@@ -1,5 +1,42 @@
 <?php
 include 'function.php';
+
+
+//Genel Ayarlar Güncelleme şlemi
+if (isset($_POST['ayarguncelle'])) {
+
+    $ayarcek = tekveri("ayar_tbl", "ayar_id", "0");
+
+    if ($_FILES['ayar_logo']['size'] != 0) {
+        $uploads_dir = 'img/';
+        $tmp_name = $_FILES['ayar_logo']["tmp_name"];
+        $name = $_FILES['ayar_logo']["name"];
+        $sayi1 = rand(10000, 99999);
+        $refimgyol = $uploads_dir . $sayi1 . $name;
+        move_uploaded_file($tmp_name, "$uploads_dir/$sayi1$name");
+    } else {
+        $refimgyol = '';
+    }
+
+    $ayarkaydet = $db->prepare("UPDATE ayar_tbl SET
+    ayar_title=:title,
+    ayar_desc=:description,
+    ayar_logo=:logo
+    WHERE ayar_id=0
+    ");
+    $update = $ayarkaydet->execute(array(
+        'title' => $_POST['ayar_title'],
+        'description' => $_POST['ayar_desc'],
+        'logo' => $refimgyol
+    ));
+
+    if ($update) {
+        Header("Location:admin/ayarlar.php?durum=ok");
+    } else {
+        Header("Location:admin/ayarlar.php?durum=no");
+    }
+}
+
 /*ÜRÜN İŞLEMLERİ*/
 
 //Ürün Ekleme
@@ -27,7 +64,7 @@ if (isset($_POST['urunekle'])) {
         'aciklama' => $_POST['description'],
         'fiyat' => $_POST['price'],
         'kategori' => $_POST['category_id'],
-        'aktif' => $_POST['status'],
+        'aktif' => 1,
         'foto' => $refimgyol
     ));
 
@@ -110,7 +147,7 @@ if (isset($_POST['kategoriekle'])) {
         @$name = $_FILES['image']["name"];
         $sayi1 = rand(10000, 99999);
         $refimgyol = $uploads_dir . $sayi1 . $name;
-        @move_uploaded_file($tmp_name, "$uploads_dir/$sayi1$name");
+        move_uploaded_file($tmp_name, "$uploads_dir/$sayi1$name");
     } else {
         $refimgyol = '';
     }
@@ -123,7 +160,7 @@ if (isset($_POST['kategoriekle'])) {
     $insert = $kategorikaydet->execute(array(
         'ad' => $_POST['name'],
         'aciklama' => $_POST['description'],
-        'aktif' => $_POST['status'],
+        'aktif' => 1,
         'foto' => $refimgyol
     ));
     if ($insert) {
@@ -153,6 +190,7 @@ if (isset($_POST['kategoriduzenle'])) {
         name=:ad,
         description=:aciklama,
         status=:aktif,
+        sira=:siralama,
         image=:foto
         WHERE id={$_POST['id']}
         ");
@@ -160,6 +198,7 @@ if (isset($_POST['kategoriduzenle'])) {
         'ad' => $_POST['name'],
         'aciklama' => $_POST['description'],
         'aktif' => $_POST['status'],
+        'siralama' => $_POST['sira'],
         'foto' => $refimgyol
     ));
 

@@ -5,7 +5,7 @@ date_default_timezone_set('Europe/Istanbul');
 @session_start();
 try {
 
-	$db = new PDO("mysql:host=localhost;dbname=qrmenu_db;charset=utf8", 'root', '');
+	$db = new PDO("mysql:host=localhost;dbname=arcpos;charset=utf8", 'root', '');
 } catch (PDOException $e) {
 	echo $e->getMessage();
 }
@@ -26,7 +26,7 @@ if (isset($_POST['login'])) {
 	echo $id = $kullanicicek['id'];
 	if ($say > 0) {
 		$_SESSION['id'] = $id;
-		go("admin/index.php");
+		go("admin/urunler.php");
 	} else {
 		go("admin/login.php");
 	}
@@ -34,10 +34,15 @@ if (isset($_POST['login'])) {
 
 function base_url($url = "")
 {
+
+    $requestUri = $_SERVER['REQUEST_URI'];
+    $parts = explode('/', $requestUri);
+    $firstPart = $parts[1];
+
 	return sprintf(
 		"%s://%s/%s",
 		isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http',
-		$_SERVER['SERVER_NAME'],
+		$_SERVER['SERVER_NAME']."/".$firstPart,
 		$url
 	);
 }

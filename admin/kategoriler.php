@@ -11,6 +11,7 @@ $kategorisor->execute();?>
        <h4>Kategoriler</h4>
      </div>
      <form action="<?=base_url("islem.php")?>" method="POST">
+         <div class="table-responsive">
       <table class="table table-striped table-md">
         <tr>
           <th>Kategori Foto</th>
@@ -32,6 +33,7 @@ $kategorisor->execute();?>
             </tr>
           <?php } ?>
         </table>
+        </div>
       </div>
       <div class="col-md-12 text-right">
         <a class="btn btn-warning" href="index.php"><i class="fa fa-long-arrow-alt-left"></i> Geri Dön</a>
